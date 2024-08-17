@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced AR/VR E-Commerce</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header and Navigation Styles */
+        header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        header nav ul li {
+            margin: 0 20px;
+        }
+
+        header nav ul li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header nav ul li a:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 100px 20px 50px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            margin: 10px auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        h1, h2 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Product Grid Styles */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            padding: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .product:hover {
+            transform: translateY(-10px);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .product p {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .ar-view, .checkout {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .ar-view:hover, .checkout:hover {
+            background: linear-gradient(135deg, #ff4b2b, #ff416c);
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        /* AR Viewer Styles */
+        #ar-viewer {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: none;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Animation Styles */
+        .animate {
+            animation: zoomIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header nav ul li {
+                margin: 0 10px;
+            }
+
+            section {
+                padding: 80px 15px 40px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Contact Form Styles */
+#contact form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Advanced AR/VR E-Commerce</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home">
+        <h2>Welcome to the Future of Shopping</h2>
+        <p>Experience augmented and virtual reality shopping with cutting-edge products.</p>
+        <button id="startAR">Try AR/VR Now</button>
+    </section>
+
+    <section id="shop">
+        <h2>Shop Our Collection</h2>
+        <div class="product-grid">
+            <div class="product">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0pd1jBjIzjGVVlYXNSJkNSZ4P1Tg9kvx6pA&s" alt="T-Shirt">
+                <p>Animated AR T-Shirt</p>
+                <button class="ar-view" data-model="https://sketchfab.com/3d-models/animated-tshirt-123456">View in AR</button>
+                <button class="checkout" data-product="Animated AR T-Shirt" data-price="49.99">Buy Now - $49.99</button>
+            </div>
+            <div class="product">
+                <img src="https://media.sketchfab.com/models/5cb0778041a34f09b409a38c687bb1d4/thumbnails/ad3e71323c224cef810e9748391c4ae6/b2dd5770c0014c589a6e773b260270c4.jpeg" alt="Mobile Phone">
+                <p>VR Mobile Phone</p>
+                <button class="ar-view" data-model="https://sketchfab.com/3d-models/animated-mobile-phone-123456">View in AR/VR</button>
+                <button class="checkout" data-product="VR Mobile Phone" data-price="699.99">Buy Now - $699.99</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="ar-viewer">
+        <a-scene embedded>
+            <a-marker preset="hiro">
+                <a-entity id="ar-model" position="0 1 0" scale="0.5 0.5 0.5"></a-entity>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Integrating AR/VR technology to revolutionize the shopping experience.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form action="/contact" method="POST">
+          <section id="contact">
+    <h2>Contact Us</h2>
+    <form action="/contact" method="POST">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required><br>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Your Email" required><br>
+        </div>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Your Message"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</section>
+
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Advanced AR/VR E-Commerce. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script>
+        document.getElementById('startAR').addEventListener('click', function() {
+            document.getElementById('ar-viewer').style.display = 'block';
+        });
+
+        const arButtons = document.querySelectorAll('.ar-view');
+        arButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modelUrl = this.getAttribute('data-model');
+                const productImage = this.closest('.product').querySelector('img');
+                productImage.classList.add('animate');
+                setTimeout(() => {
+                    productImage.classList.remove('animate');
+                    startARExperience(modelUrl);
+                }, 600); // Match with animation duration
+            });
+        });
+
+        function startARExperience(modelUrl) {
+            console.log('Loading AR model from: ' + modelUrl);
+            const aBox = document.querySelector('#ar-model');
+            aBox.setAttribute('material', `src: ${modelUrl}`);
+        }
+
+        const checkoutButtons = document.querySelectorAll('.checkout');
+        checkoutButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.getAttribute('data-product');
+                const price = this.getAttribute('data-price');
+                initiateCheckout(product, price);
+            });
+        });
+
+        function initiateCheckout(product, price) {
+            var handler = StripeCheckout.configure({
+                key: 'your-publishable-key-here', // Replace with your own Stripe public key
+                locale: 'auto',
+                token: function(token) {
+                    console.log(token);
+                    alert('Payment successful for ' + product);
+                    // Here you can add code to handle the token on your server
+                }
+            });
+
+            handler.open({
+                name: 'Advanced E-Commerce',
+                description: product,
+                amount: price * 100, // Price in cents
+                currency: 'USD'
+            });
+        }
+    </script>
+</body>
+</html>
